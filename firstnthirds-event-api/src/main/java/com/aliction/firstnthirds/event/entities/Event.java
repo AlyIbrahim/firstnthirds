@@ -49,12 +49,15 @@ public class Event {
     @JoinColumn(name = "status", referencedColumnName = "id",  nullable = false)
     private EventStatus status;
 
+    @Column(nullable = false)
+    private Long teamId;
+
     public Event(){
 
     }
 
     public Event(String name, String type, Date date, Integer duration, String location, String description,
-            String pictures_url, EventStatus status) {
+            String pictures_url, EventStatus status, Long groupId) {
         this.name = name;
         this.type = type;
         this.date = date;
@@ -63,6 +66,7 @@ public class Event {
         this.description = description;
         this.pictures_url = pictures_url;
         this.status = status;
+        this.teamId = groupId;
     }
 
     public Long getId() {
@@ -135,6 +139,14 @@ public class Event {
 
     public void setStatus(EventStatus status) {
         this.status = status;
+    }
+
+    public Long getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Long groupId) {
+        this.teamId = groupId;
     }
 
 

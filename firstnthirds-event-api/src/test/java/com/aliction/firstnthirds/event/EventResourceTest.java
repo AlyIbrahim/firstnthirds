@@ -14,9 +14,14 @@ public class EventResourceTest {
     public void testEventEndpoint() {
 
         given()
-            .when().body("{\"name\": \"Top Golf\", \"type\": \"Social\", \"date\": \"2019-05-06 16:00:00\", \"duration\": 90, \"location\": \"Frisco\", \"description\": \"Mini Golf\", \"pictures_url\": \"https-drive.google.com\", \"status\" : { \"id\": 4, \"status\": \"Created\" } }")
+            .when().body("{\"name\": \"Top Golf\", \"type\": \"Social\", \"date\": \"2019-05-06 16:00:00\", \"duration\": 90, \"location\": \"Frisco\", \"description\": \"Mini Golf\", \"pictures_url\": \"https-drive.google.com\", \"status\" : { \"id\": 4, \"status\": \"Created\" }, \"teamId\": 1 }")
             .contentType(MediaType.APPLICATION_JSON).post("/event")
             .then().statusCode(201);
+
+        given()
+            .when().body("{\"name\": \"Top Golf\", \"type\": \"Social\", \"date\": \"2019-05-06 16:00:00\", \"duration\": 90, \"location\": \"Frisco\", \"description\": \"Mini Golf\", \"pictures_url\": \"https-drive.google.com\", \"status\" : { \"id\": 4, \"status\": \"Created\" }, \"teamId\": 7 }")
+            .contentType(MediaType.APPLICATION_JSON).post("/event")
+            .then().statusCode(404);
 
         given()
           .when().get("/event")

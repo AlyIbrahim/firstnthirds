@@ -14,7 +14,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.aliction.firstnthirds.event.entities.Event;
+import com.aliction.firstnthirds.event.entities.Team;
+import com.aliction.firstnthirds.event.services.TeamService;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/event")
@@ -22,8 +26,14 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
 @Consumes(MediaType.APPLICATION_JSON)
 public class EventResource {
 
+    public static Logger LOGGER = Logger.getLogger(EventResource.class);
+
     @Inject
     EntityManager entityManager;
+
+    @Inject
+    @RestClient
+    TeamService teamService;
 
     @GET
     public Event[] getAll() {
@@ -45,6 +55,11 @@ public class EventResource {
     @POST
     @Transactional
     public Response create(Event event){
+        Team team = teamService.getById(event.getTeamId());
+        if (team == null){
+            throw new WebApplicationException("Team with id of " + event.getTeamId() + " does not exist.", 404);
+        }
+        LOGGER.info(team.getStatus().getProvisionStatus());
         entityManager.persist(event);
         return Response.ok(event).status(201).build();
     }
