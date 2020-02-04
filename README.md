@@ -1,7 +1,7 @@
 # First And Thirds
 Event Management application built with microservies using Quarkus
 
-The application is developed to manage Events that are created by multiple Teams, where Users can be be members of multiple Teams.
+The application is developed to manage Events that are created by multiple Teams, where Users can register to Events organized by the Teams they are subscribed to.
 
 ## Personas
 **Admin :** This is the over all admin in the application, he has full authority and mainly he can create Teams and assign Team Leads  
