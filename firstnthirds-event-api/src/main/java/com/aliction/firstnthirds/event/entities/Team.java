@@ -5,7 +5,6 @@ public class Team{
     
     
   private Long id;
-  
   private String name;
   private String city;
   private String state;

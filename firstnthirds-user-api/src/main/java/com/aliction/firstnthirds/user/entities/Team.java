@@ -1,37 +1,14 @@
-package com.aliction.firstnthirds.team.entities;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
-import javax.persistence.QueryHint;
+package com.aliction.firstnthirds.user.entities;
 
 
-@Entity
-@NamedQuery(name = "Team.findAll",
-      query = "SELECT team FROM Team team ORDER BY team.name",
-hints = @QueryHint(name = "org.hibernate.cacheable", value = "true") )
 public class Team{
     
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
   private Long id;
-  @Column(unique = true, nullable =false)
   private String name;
-  @Column(nullable=false)
   private String city;
   private String state;
-  @Column(nullable=false)
   private String country;
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-  @JoinColumn(name = "status", referencedColumnName = "id", nullable = false)
   private TeamStatus status;
 
     public Team(){

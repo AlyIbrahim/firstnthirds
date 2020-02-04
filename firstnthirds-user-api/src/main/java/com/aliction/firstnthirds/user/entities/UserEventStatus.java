@@ -1,32 +1,26 @@
-package com.aliction.firstnthirds.event.entities;
+package com.aliction.firstnthirds.user.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.QueryHint;
-
 
 @Entity
-@NamedQuery(name = "EventStatus.findAll",
-      query = "SELECT eventStatus FROM EventStatus eventStatus ORDER BY eventStatus.status",
-hints = @QueryHint(name = "org.hibernate.cacheable", value = "true") )
-public class EventStatus{
+public class UserEventStatus{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,  nullable = false)
+    @Column(unique = true, nullable = false)
     private String status;
 
-    public EventStatus(){
+    public UserEventStatus(){
 
     }
 
-    public EventStatus(String status) {
+    public UserEventStatus(String status) {
         this.status = status;
     }
 

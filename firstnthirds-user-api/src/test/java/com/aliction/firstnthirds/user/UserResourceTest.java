@@ -4,7 +4,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 public class UserResourceTest {
@@ -19,7 +18,7 @@ public class UserResourceTest {
 
          given()
              .when()
-                 .body("{\"firstName\" : \"Aly\", \"lastName\" : \"Ibrahim\", \"email\" : \"aly@redhat.com\", \"city\" : \"Plano\", \"state\" : \"Texas\", \"country\" : \"US\"}")
+                 .body("{\"firstName\" : \"Aly\", \"lastName\" : \"Ibrahim\", \"email\" : \"aly@redhat.com\", \"city\" : \"Plano\", \"state\" : \"Texas\", \"country\" : \"US\", \"teamId\": 2}")
                  .contentType("application/json")
                  .post("/user")
              .then()
@@ -34,7 +33,7 @@ public class UserResourceTest {
         
          given()
             .when()
-                .delete("/user/1")
+                .delete("/user/4")
             .then()
                 .statusCode(204);             
     }

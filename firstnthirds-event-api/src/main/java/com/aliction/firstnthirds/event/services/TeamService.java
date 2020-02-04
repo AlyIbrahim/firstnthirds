@@ -14,7 +14,7 @@ public interface TeamService{
 
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     Team getById(@PathParam Long id);
 
     

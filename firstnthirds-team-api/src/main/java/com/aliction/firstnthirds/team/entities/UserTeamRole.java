@@ -1,4 +1,4 @@
-package com.aliction.firstnthirds.event.entities;
+package com.aliction.firstnthirds.team.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,26 +8,26 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 
-
 @Entity
-@NamedQuery(name = "EventStatus.findAll",
-      query = "SELECT eventStatus FROM EventStatus eventStatus ORDER BY eventStatus.status",
+@NamedQuery(name = "UserTeamRole.findAll",
+      query = "SELECT userteamrole FROM UserTeamRole userteamrole ORDER BY userteamrole.id",
 hints = @QueryHint(name = "org.hibernate.cacheable", value = "true") )
-public class EventStatus{
+public class UserTeamRole{
+    // Check implumenting composite unique user+team
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,  nullable = false)
-    private String status;
+    @Column(nullable = false)
+    private String role;
 
-    public EventStatus(){
+    public UserTeamRole(){
 
     }
 
-    public EventStatus(String status) {
-        this.status = status;
+    public UserTeamRole(String role) {
+        this.role = role;
     }
 
     public Long getId() {
@@ -38,12 +38,12 @@ public class EventStatus{
         this.id = id;
     }
 
-    public String getStatus() {
-        return status;
+    public String getRole() {
+        return role;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setRole(String role) {
+        this.role = role;
     }
 
 }

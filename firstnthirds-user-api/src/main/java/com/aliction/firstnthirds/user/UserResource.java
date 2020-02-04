@@ -1,5 +1,7 @@
 package com.aliction.firstnthirds.user;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -14,8 +16,14 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.aliction.firstnthirds.user.entities.Event;
 import com.aliction.firstnthirds.user.entities.User;
+import com.aliction.firstnthirds.user.entities.UserEvent;
+import com.aliction.firstnthirds.user.entities.UserTeam;
+import com.aliction.firstnthirds.user.services.EventService;
+import com.aliction.firstnthirds.user.services.TeamService;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 
@@ -29,6 +37,14 @@ public class UserResource {
     @Inject
     EntityManager entityManager;
 
+    @Inject
+    @RestClient
+    TeamService teamService;
+
+    @Inject
+    @RestClient
+    EventService eventService;
+
     @GET
     public User[] getAll() {
         return entityManager.createNamedQuery("User.findAll", User.class)
@@ -36,7 +52,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     public User get(@PathParam Long id) {
         User user = entityManager.find(User.class, id);
         if (user == null) {
@@ -45,6 +61,35 @@ public class UserResource {
         return user;
     }
 
+    @GET
+    @Path("/{userId}/teams")
+    public List<UserTeam> getUserTeams(@PathParam Long userId){
+        User user = get(userId);
+        List<UserTeam> userTeams = teamService.getUserTeams(user.getId());
+        return userTeams;
+    }
+
+    @GET
+    @Path("/{userId}/events")
+    public List<Event> getUserEvents(@PathParam Long userId){
+        
+        User user = get(userId);
+        if (user == null){
+            throw new WebApplicationException("User with id of " + userId + " does not exist.", 404);
+        }
+        List<UserEvent> userEvents = entityManager.createQuery("SELECT userevent FROM UserEvent userevent WHERE userevent.user = " + user.getId(), UserEvent.class).getResultList();
+        if (userEvents == null || userEvents.size() == 0){
+            throw new WebApplicationException("User with id of " + userId + " does not exist.", 404);
+        }
+        List<Event> events = new ArrayList<Event>(userEvents.size());
+
+        for (UserEvent userEvent : userEvents){
+            LOGGER.info(userEvent.getEvent().toString());
+            events.add(eventService.getEventById(userEvent.getEvent()));
+        }
+
+        return events;
+    }
 
     @POST
     @Transactional
@@ -52,7 +97,7 @@ public class UserResource {
         entityManager.persist(user);
         return Response.ok(user).status(201).build();        
     }
-
+ 
     @DELETE
     @Transactional
     public Response delete(User user) {
