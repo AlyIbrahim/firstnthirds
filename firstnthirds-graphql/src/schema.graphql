@@ -1,0 +1,102 @@
+type Query {
+#   info: String!
+#   feed: [Link!]!
+    users: [User!]!
+    user(id: ID!): User
+    events: [Event!]!
+    event(id: ID!): Event
+    teams: [Team!]!
+    team(id: ID!):Team
+    userteams: [UserTeam!]!
+    userteam(id: Int!): UserTeam
+    userevents: [UserEvent!]!
+    userevent (id: Int!): UserEvent!
+}
+
+type Mutation {
+  post(url: String!, description: String!): Link!
+
+  # Update a link
+  updateLink(id: ID!, url: String, description: String): Link
+
+  # Delete a link
+  deleteLink(id: ID!): Link
+}
+
+type Link {
+  id: ID!
+  description: String!
+  url: String!
+}
+
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    city: String
+    state: String
+    country: String
+}
+
+type Team {
+  id:ID!
+  name: String
+  city: String
+  state: String
+  country: String
+  status: TeamStatus
+}
+
+type TeamStatus{
+  id: ID!
+  provisionStatus: String
+}
+
+type UserTeamRole{
+  id: ID!
+  role: String
+}
+
+type UserTeam {
+  id: ID!
+  user: User
+  team: Team
+  role: UserTeamRole
+}
+
+type Event {
+  id: ID!
+  name: String!
+  type: String!
+  date: String!
+  duration: String
+  location: String!
+  description: String
+  pictures_url: String
+  status: EventStatus
+  teamId: Int
+}
+
+type EventStatus {
+  id: ID!
+  status: String
+}
+
+type UserEvent {
+  event: Event
+  user: User
+  status: UserEventStatus
+  role: UserEventRole
+}
+
+type UserEventStatus {
+  id: ID!
+  status: String
+
+}
+
+type UserEventRole {
+  id: ID!
+  role: String
+}
