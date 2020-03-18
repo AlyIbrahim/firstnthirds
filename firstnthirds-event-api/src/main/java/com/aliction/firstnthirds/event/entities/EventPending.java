@@ -16,8 +16,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.QueryHint;
 
 @Entity
-@NamedQuery(name = "Event.findAll", query = "SELECT event FROM Event event ORDER BY event.name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-public class Event {
+@NamedQuery(name = "EventPending.findAll", query = "SELECT eventPending FROM EventPending eventPending ORDER BY eventPending.name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+public class EventPending {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,11 +52,11 @@ public class Event {
     @Column(nullable = false)
     private Long teamId;
 
-    public Event(){
+    public EventPending(){
 
     }
 
-    public Event(String name, String type, Date date, Integer duration, String location, String description,
+    public EventPending(String name, String type, Date date, Integer duration, String location, String description,
             String pictures_url, EventStatus status, Long groupId) {
         this.name = name;
         this.type = type;
@@ -69,19 +69,19 @@ public class Event {
         this.teamId = groupId;
     }
 
-    public Event(EventPending eventPending) {
-        this.name = eventPending.getName();
-        this.type = eventPending.getType();
-        this.date = eventPending.getDate();
-        this.duration = eventPending.getDuration();
-        this.location = eventPending.getLocation();
-        this.description = eventPending.getDescription();
-        this.pictures_url = eventPending.getPictures_url();
-        this.status = eventPending.getStatus();
-        this.teamId = eventPending.getTeamId();
-	}
+    public EventPending(Event event) {
+        this.name = event.getName();
+        this.type = event.getType();
+        this.date = event.getDate();
+        this.duration = event.getDuration();
+        this.location = event.getLocation();
+        this.description = event.getDescription();
+        this.pictures_url = event.getPictures_url();
+        this.status = event.getStatus();
+        this.teamId = event.getTeamId();
+    }
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 

@@ -23,7 +23,6 @@ import com.aliction.firstnthirds.team.entities.User;
 import com.aliction.firstnthirds.team.entities.UserTeam;
 import com.aliction.firstnthirds.team.services.EventService;
 import com.aliction.firstnthirds.team.services.UserService;
-import com.google.errorprone.annotations.RestrictedApi;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;

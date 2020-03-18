@@ -60,7 +60,7 @@ public class TeamStatusResource {
     public Response delete(@PathParam Long id){
         TeamStatus teamStatus = entityManager.getReference(TeamStatus.class, id);
         if (teamStatus == null){
-            throw new WebApplicationException("Team Statuswith id of " + id + " does not exist.", 404);
+            throw new WebApplicationException("Team Status with id of " + id + " does not exist.", 404);
         }
         entityManager.remove(teamStatus);
         return Response.ok(teamStatus).status(204).build();

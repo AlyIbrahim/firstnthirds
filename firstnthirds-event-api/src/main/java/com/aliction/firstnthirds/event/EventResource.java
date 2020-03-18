@@ -16,13 +16,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.aliction.firstnthirds.event.entities.Event;
+import com.aliction.firstnthirds.event.entities.EventPending;
 import com.aliction.firstnthirds.event.entities.EventStatus;
 import com.aliction.firstnthirds.event.entities.Team;
+import com.aliction.firstnthirds.event.events.EventAction;
+import com.aliction.firstnthirds.event.events.EventPendingCreated;
 import com.aliction.firstnthirds.event.services.TeamService;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.annotations.SseElementType;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.reactivestreams.Publisher;
+
+import io.smallrye.reactive.messaging.annotations.Channel;
+import io.smallrye.reactive.messaging.annotations.Emitter;
 
 @Path("/event")
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,6 +46,17 @@ public class EventResource {
     @RestClient
     TeamService teamService;
 
+    @Inject 
+    @Channel("ivy")
+    Emitter<Event> eventEmitter;
+
+    @Inject
+    @Channel("events") Publisher<Event> events;
+
+    @Inject 
+    @Channel("event")
+    Emitter<EventAction> eventActionEmitter;
+    
     @GET
     public Event[] getAll() {
         return entityManager.createNamedQuery("Event.findAll", Event.class)
@@ -88,6 +107,15 @@ public class EventResource {
         return events;        
     }
 
+    @GET
+    @Path("/stream")
+    @Produces(MediaType.SERVER_SENT_EVENTS) 
+    @SseElementType(MediaType.APPLICATION_JSON) 
+    public Publisher<Event> stream() { 
+        LOGGER.info(" FECHING EVENTS ");
+        return events;
+    }
+
     @POST
     @Transactional
     public Response create(Event event){
@@ -100,6 +128,22 @@ public class EventResource {
         }
         LOGGER.info(team.getStatus().getProvisionStatus());
         entityManager.persist(event);
+        if(event.getStatus().getId() == 2){
+            LOGGER.info(" READY EVENT PUBLISHED ");
+            eventEmitter.send(event);
+        }
+        return Response.ok(event).status(201).build();
+    }
+
+    @POST
+    @Transactional
+    @Path("async")
+    public Response createAsync(Event event){
+        EventPending eventPending = new EventPending(event);
+        entityManager.persist(eventPending);
+        EventPendingCreated eventPendingCreated = new EventPendingCreated(eventPending.getId(), event.getTeamId());
+        LOGGER.info("PENDING ID : "+ eventPending.getId());
+        eventActionEmitter.send(eventPendingCreated);
         return Response.ok(event).status(201).build();
     }
 

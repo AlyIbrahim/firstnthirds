@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prices</title>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+</head>
+<body>
+<div class="container">
+
+    <h2>Last price</h2>
+    <div class="row">
+    <p class="col-md-12">New Event Created:  <strong><span id="content">N/A</span>&nbsp;&euro;</strong>.</p>
+    <ul id="list">
+        <li> Test </li>
+    </ul>
+    </div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var source = new EventSource("/event/stream");
+    source.onmessage = function (event) {
+        console.log(event.data)
+    //     document.getElementById("content").innerHTML = event.data;
+    // };
+    const newElement = document.createElement("li");
+  const eventList = document.getElementById("list");
+
+  newElement.innerHTML = "message: " + JSON.parse(event.data).name;
+  eventList.appendChild(newElement);
+    };
+</script>
+</html>
+
