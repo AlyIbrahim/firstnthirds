@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.Join;
 import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,11 +21,15 @@ import com.aliction.firstnthirds.user.entities.Event;
 import com.aliction.firstnthirds.user.entities.User;
 import com.aliction.firstnthirds.user.entities.UserEvent;
 import com.aliction.firstnthirds.user.entities.UserTeam;
+import com.aliction.firstnthirds.user.events.JoinTeamRequested;
 import com.aliction.firstnthirds.user.services.EventService;
 import com.aliction.firstnthirds.user.services.TeamService;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+
+import io.smallrye.reactive.messaging.annotations.Emitter;
+import io.smallrye.reactive.messaging.annotations.Channel;
 
 
 
@@ -44,6 +49,9 @@ public class UserResource {
     @Inject
     @RestClient
     EventService eventService;
+
+    @Inject
+    @Channel("joinTeamRequests") Emitter<JoinTeamRequested> joinTeamEmitter;
 
     @GET
     public User[] getAll() {
@@ -84,8 +92,8 @@ public class UserResource {
         List<Event> events = new ArrayList<Event>(userEvents.size());
 
         for (UserEvent userEvent : userEvents){
-            LOGGER.info(userEvent.getEvent().toString());
-            events.add(eventService.getEventById(userEvent.getEvent()));
+            LOGGER.info(userEvent.getEventId().toString());
+            events.add(eventService.getEventById(userEvent.getEventId()));
         }
 
         return events;
@@ -96,6 +104,14 @@ public class UserResource {
     public Response create(User user) {
         entityManager.persist(user);
         return Response.ok(user).status(201).build();        
+    }
+
+    @POST
+    @Transactional
+    @Path("async/join")
+    public Response joinTeamRequest(JoinTeamRequested joinTeamRequested){
+        joinTeamEmitter.send(joinTeamRequested);
+        return Response.ok(joinTeamRequested).status(201).build();
     }
  
     @DELETE

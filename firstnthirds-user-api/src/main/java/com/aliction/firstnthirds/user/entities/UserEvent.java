@@ -27,7 +27,7 @@ public class UserEvent{
     private User user;
 
     @Column(nullable = false)
-    private Long event;
+    private Long eventId;
 
     @OneToOne(fetch = FetchType.EAGER, cascade= CascadeType.MERGE)
     @JoinColumn(name = "role", referencedColumnName= "id", nullable = false)
@@ -41,9 +41,9 @@ public class UserEvent{
 
     }
 
-    public UserEvent(User user, Long event, UserEventRole role, UserEventStatus status) {
+    public UserEvent(User user, Long eventId, UserEventRole role, UserEventStatus status) {
         this.user = user;
-        this.event = event;
+        this.eventId = eventId;
         this.role = role;
         this.status = status;
     }
@@ -64,13 +64,13 @@ public class UserEvent{
         this.user = user;
     }
 
-    public Long getEvent() {
-        return event;
-    }
+    public Long getEventId() {
+		return eventId;
+	}
 
-    public void setEvent(Long event) {
-        this.event = event;
-    }
+	public void setEventId(Long eventId) {
+		this.eventId = eventId;
+	}
 
     public UserEventRole getRole() {
         return role;
@@ -87,5 +87,6 @@ public class UserEvent{
     public void setStatus(UserEventStatus status) {
         this.status = status;
     }
+
 
 }

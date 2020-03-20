@@ -17,10 +17,14 @@ import javax.ws.rs.core.Response;
 
 import com.aliction.firstnthirds.user.entities.UserEvent;
 import com.aliction.firstnthirds.user.entities.UserTeam;
+import com.aliction.firstnthirds.user.events.EventRegisterationRequested;
 import com.aliction.firstnthirds.user.services.TeamService;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+
+import io.smallrye.reactive.messaging.annotations.Channel;
+import io.smallrye.reactive.messaging.annotations.Emitter;
 
 
 
@@ -36,6 +40,10 @@ public class UserEventResource {
     @Inject
     @RestClient
     TeamService teamService;
+
+    @Inject 
+    @Channel("eventRegisterationRequests")
+    Emitter<EventRegisterationRequested> userEventEmitter;
 
     @GET
     public UserEvent[] getAll() {
@@ -61,6 +69,15 @@ public class UserEventResource {
         }
         entityManager.persist(userEvent);
         return Response.ok(userEvent).status(201).build();        
+    }
+
+    @POST
+    @Transactional
+    @Path("/async/register")
+    public Response registerToEvent(UserEvent userEvent){
+        EventRegisterationRequested eventRegisterationRequested = new EventRegisterationRequested(userEvent.getEventId(), userEvent.getRole().getId(), userEvent.getStatus().getId(), userEvent.getUser().getId());
+        userEventEmitter.send(eventRegisterationRequested);
+        return Response.ok(userEvent).status(201).build();
     }
  
     @DELETE
