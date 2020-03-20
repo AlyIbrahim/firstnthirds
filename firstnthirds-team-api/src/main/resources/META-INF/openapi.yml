@@ -1,0 +1,389 @@
+---
+openapi: 3.0.1
+info:
+  title: Team Service API
+  version: "1.0"
+paths:
+  /team:
+    get:
+      summary: Retrieves all teams
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+    post:
+      summary: Creates a new team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Deletes team by sending team object - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        "200":
+          description: OK
+  /team/{id}:
+    get:
+      summary: Retrieves a team by id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+    delete:
+      summary: Deletes a team by id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /team/{team}/events:
+    get:
+      summary: Retrieves team events by team name
+      parameters:
+      - name: team
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEvent'
+  /team/{team}/events/{status}:
+    get:
+      summary: Retrieves team events by team name filtered by status
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: team
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEvent'
+  /team/{team}/leads:
+    get:
+      summary: Retrieves team leads by team name
+      parameters:
+      - name: team
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUser'
+  /team/{team}/members:
+    get:
+      summary: Retrieves team members by team name
+      parameters:
+      - name: team
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUser'
+  /teamStatus:
+    get:
+      summary: Retrieves all team statuses
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamStatus'
+    post:
+      summary: Creates a new team status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamStatus'
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Deletes team status by sending team status object - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamStatus'
+      responses:
+        "200":
+          description: OK
+  /teamStatus/{id}:
+    get:
+      summary: Retrieves team status by team status id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamStatus'
+    delete:
+      summary: Deletes team status by team status id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /userteam:
+    get:
+      summary: Retrieves all user team relations
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserTeam'
+    post:
+      summary: Creates a new user team relation - DEPRECATED, should be triggeres from user service using /user/async/join
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTeam'
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Deletes a user team relation - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTeam'
+      responses:
+        "200":
+          description: OK
+  /userteam/user/{userId}:
+    get:
+      summary: Retrieves all teams for user with userId - DEPRECATED
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserTeam'
+  /userteam/{id}:
+    get:
+      summary: Retrieves user team relation by relation id - DEPRECATED
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTeam'
+    delete:
+      summary: Deletes user team relation by relation id - DEPRECATED
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    UserTeamRole:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        role:
+          type: string
+    Team:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        state:
+          type: string
+        status:
+          $ref: '#/components/schemas/TeamStatus'
+    TeamStatus:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        provisionStatus:
+          type: string
+    UserTeam:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        role:
+          $ref: '#/components/schemas/UserTeamRole'
+        team:
+          $ref: '#/components/schemas/Team'
+        user:
+          format: int64
+          type: integer
+    ListUserTeam:
+      $ref: '#/components/schemas/ListUserTeam'
+    Event:
+      type: object
+      properties:
+        date:
+          $ref: '#/components/schemas/Date'
+        description:
+          type: string
+        duration:
+          format: int32
+          type: integer
+        id:
+          format: int64
+          type: integer
+        location:
+          type: string
+        name:
+          type: string
+        pictures_url:
+          type: string
+        status:
+          $ref: '#/components/schemas/EventStatus'
+        teamId:
+          format: int64
+          type: integer
+        type:
+          type: string
+    ListEvent:
+      $ref: '#/components/schemas/ListEvent'
+    Date:
+      format: date
+      type: string
+    EventStatus:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        status:
+          type: string
+    User:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        id:
+          format: int64
+          type: integer
+        lastName:
+          type: string
+        state:
+          type: string
+        teamId:
+          format: int64
+          type: integer
+        groupId:
+          format: int64
+          type: integer
+    ListUser:
+      $ref: '#/components/schemas/ListUser'

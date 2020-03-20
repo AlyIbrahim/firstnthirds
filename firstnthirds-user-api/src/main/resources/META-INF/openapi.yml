@@ -1,0 +1,396 @@
+---
+openapi: 3.0.1
+info:
+  title: User Service API
+  version: "1.0"
+paths:
+  /admin:
+    get:
+      summary: Retrieves all admins    
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Admin'
+    post:
+      summary: Creates an admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Admin'    
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Deletes an admin by sending admin object - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Admin'       
+      responses:
+        200:
+          description: OK
+  /admin/{id}:
+    get:
+      summary: Retrieves admin by admin Id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+    delete:
+      summary: Deletes admin by admin Id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+  /user:
+    get:
+      summary: Retrieves all users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Creates a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'    
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Deletes a user by sending user object - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'     
+      responses:
+        200:
+          description: OK
+  /user/async/join:
+    post:
+      summary: Send asynchronous request for a user to join a team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTeam'
+      responses:
+        200:
+          description: OK
+  /user/{id}:
+    get:
+      summary: Retrieves user by user Id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Deletes user by user id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+  /user/{userId}/events:
+    get:
+      summary: Retrieves events by user Id
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEvent'
+  /user/{userId}/teams:
+    get:
+      summary: Retrieves teams of this user Id
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserTeam'
+  /userevent:
+    get:
+      summary: Retrieves All Events per user
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserEvent'
+    post:
+      summary: Send request for a user to register to an event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserEvent'    
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Deletes a user event relation by sending UserEvent object - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserEvent'        
+      responses:
+        200:
+          description: OK
+  /userevent/async/register:
+    post:
+      summary: Send asynchronous request for a user to register to an event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserEvent'    
+      responses:
+        200:
+          description: OK
+  /userevent/{id}:
+    get:
+      summary: Retrieves events per user event id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEvent'
+    delete:
+      summary: Deletes user event by user event id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        200:
+          description: OK
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        id:
+          format: int64
+          type: integer
+        lastName:
+          type: string
+        state:
+          type: string
+        teamId:
+          format: int64
+          type: integer
+        groupId:
+          format: int64
+          type: integer
+    Admin:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+    Event:
+      type: object
+      properties:
+        date:
+          $ref: '#/components/schemas/Date'
+        description:
+          type: string
+        duration:
+          format: int32
+          type: integer
+        id:
+          format: int64
+          type: integer
+        location:
+          type: string
+        name:
+          type: string
+        pictures_url:
+          type: string
+        status:
+          $ref: '#/components/schemas/EventStatus'
+        teamId:
+          format: int64
+          type: integer
+        type:
+          type: string
+    ListEvent:
+      $ref: '#/components/schemas/ListEvent'
+    Date:
+      format: date
+      type: string
+    EventStatus:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        status:
+          type: string
+    UserTeam:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        role:
+          $ref: '#/components/schemas/UserTeamRole'
+        team:
+          $ref: '#/components/schemas/Team'
+        user:
+          format: int64
+          type: integer
+    ListUserTeam:
+      $ref: '#/components/schemas/ListUserTeam'
+    UserTeamRole:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        role:
+          type: string
+    Team:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        state:
+          type: string
+        status:
+          $ref: '#/components/schemas/TeamStatus'
+    TeamStatus:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        provisionStatus:
+          type: string
+    UserEventRole:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        role:
+          type: string
+    UserEventStatus:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        status:
+          type: string
+    UserEvent:
+      type: object
+      properties:
+        eventId:
+          format: int64
+          type: integer
+        id:
+          format: int64
+          type: integer
+        role:
+          $ref: '#/components/schemas/UserEventRole'
+        status:
+          $ref: '#/components/schemas/UserEventStatus'
+        user:
+          $ref: '#/components/schemas/User'

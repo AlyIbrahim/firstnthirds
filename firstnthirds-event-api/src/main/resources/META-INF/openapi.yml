@@ -1,0 +1,254 @@
+---
+openapi: 3.0.1
+info:
+  title: Event Service API
+  version: "1.0"
+paths:
+  /event:
+    get:
+      summary: Retrieves all events
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+    post:
+      summary: Creates a new event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Deletes an event by sending Event object - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        "200":
+          description: OK
+  /event/async:
+    post:
+      summary: Send asynchronous request to create an event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        "200":
+          description: OK
+  /event/stream:
+    get:
+      summary: Streams events from events topic when synchronous events are created
+      responses:
+        "200":
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/PublisherEvent'
+  /event/team/{id}:
+    get:
+      summary: Retrieves event belongs to team (id)
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEvent'
+  /event/team/{teamId}/status/{statusId}:
+    get:
+      summary: Retrieves event belongs to team of id (teamId) and has the status id of (statusId)
+      parameters:
+      - name: statusId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEvent'
+  /event/team/{teamId}/{status}:
+    get:
+      summary: Retrieves event belongs to team of id (teamId) and has the status of (status)
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEvent'
+  /event/{id}:
+    get:
+      summary: Retrieves event by event id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+    delete:
+      summary: Deletes event by event id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /eventStatus:
+    get:
+      summary: Retrieves all event status
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventStatus'
+    post:
+      summary: Creates a new event status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventStatus'
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Deletes an eventStatus by sending EventStatus object - DEPRECATED
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventStatus'
+      responses:
+        "200":
+          description: OK
+  /eventStatus/{id}:
+    get:
+      summary: Retrieves event status by eventStatus id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventStatus'
+    delete:
+      summary: Deleted event status by eventStatus id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    Date:
+      format: date
+      type: string
+    EventStatus:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        status:
+          type: string
+    Event:
+      type: object
+      properties:
+        date:
+          $ref: '#/components/schemas/Date'
+        description:
+          type: string
+        duration:
+          format: int32
+          type: integer
+        id:
+          format: int64
+          type: integer
+        location:
+          type: string
+        name:
+          type: string
+        pictures_url:
+          type: string
+        status:
+          $ref: '#/components/schemas/EventStatus'
+        teamId:
+          format: int64
+          type: integer
+        type:
+          type: string
+    ListEvent:
+      $ref: '#/components/schemas/ListEvent'
+    PublisherEvent:
+      type: object
